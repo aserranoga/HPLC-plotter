@@ -41,13 +41,13 @@ def export_data_csv(data_frames, labels, filename='chromatogram_data.csv'):
     print(f'Data saved to {filename}')
 
 def plot_chromatograms(data_frames, labels, time_col='min', intensity_col='normalized_intensity', 
-                       offset=110, font='Arial', font_size=9, major_tick_interval=5, num_minor_ticks=4):
+                       offset=110, font='Arial', font_size=9, font_weight=regular, line_width=1.5, major_tick_interval=5, num_minor_ticks=4):
     """Plot chromatograms with offsets."""
     plt.figure(figsize=(3, 3))
-    plt.rc('font', family=font, size=font_size)
+    plt.rc('font', family=font, size=font_size, weight=font_weight)
 
     for i, df in enumerate(data_frames):
-        plt.plot(df[time_col], df[intensity_col] + i * offset, color='black', label=labels[i])
+        plt.plot(df[time_col], df[intensity_col] + i * offset, color='black', label=labels[i], linewidth=line_width)
 
     plt.xlabel('Time (min)')
     plt.xlim(9, 16)  
@@ -58,7 +58,7 @@ def plot_chromatograms(data_frames, labels, time_col='min', intensity_col='norma
     plt.gca().xaxis.set_minor_locator(AutoMinorLocator(n=num_minor_ticks))
     plt.gca().tick_params(which='major', length=4, width=1, color='black')
     plt.gca().tick_params(which='minor', length=2, width=1, color='black')
-    plt.xticks(fontname=font, fontsize=font_size)
+    plt.xticks(fontname=font, fontsize=font_size, fontweight=font_weight)
 
     plt.subplots_adjust(left=0.12, bottom=0.14, right=0.88, top=0.9)
     plt.gca().get_yaxis().set_visible(False)
