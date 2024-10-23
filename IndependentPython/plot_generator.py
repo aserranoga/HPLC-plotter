@@ -27,7 +27,7 @@ def normalize_chromatogram(df, time_col, intensity_col, peak_intensity, baseline
     df['normalized_intensity'] = (df[intensity_col] - baseline_intensity) / (peak_intensity - baseline_intensity) * 100
     return df
 
-def save_data_for_prism(data_frames, labels, filename='chromatogram_data.csv'):
+def export_data_csv(data_frames, labels, filename='chromatogram_data.csv'):
     """Save normalized chromatogram data to a CSV file for Prism."""
     base_df = data_frames[0][['min']].rename(columns={'min': 'Time (min)'})  # Start with just time points
 
@@ -83,9 +83,6 @@ for file_path in file_paths:
     data_frames.append(normalized_df)
     labels.append(os.path.basename(file_path))
 
-# Save data for Prism
-save_data_for_prism(data_frames, labels)
-
 # Reverse the order of data frames and labels
 data_frames.reverse()
 labels.reverse()
@@ -95,6 +92,9 @@ plot_chromatograms(data_frames, labels)
 
 # Save the plot as a PNG file
 plt.savefig('/Users/arnau/Desktop/data/hplc_plot.png', dpi=600)
+
+# Export all the data as csv file
+export_data_csv(data_frames, labels)
 
 # Show the plot
 plt.show()
