@@ -4,9 +4,26 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 import configparser
+import sys
 
+def get_executable_path():
+    """
+    This function returns the path where the script or executable is located.
+    If frozen (i.e., bundled with PyInstaller), it uses the location of the executable.
+    Otherwise, it uses the script's location.
+    """
+    if getattr(sys, 'frozen', False):  # If the script is run as a bundled executable
+        return os.path.dirname(sys.executable)
+    else:
+        return os.path.dirname(os.path.abspath(__file__))  # If running as a script
+
+# Get the path to the executable or script
+base_path = get_executable_path()
+
+# Locate the configuration file in the same directory and read it
+config_file_path = os.path.join(base_path, 'config.ini')
 config = configparser.ConfigParser()
-config.read('/Users/arnau/Desktop/data/python with ini file/config.ini')  # Use the correct path to your configuration file
+config.read(config_file_path)
 
 # General configuration
 destination_folder = config.get('General', 'destination_folder')
