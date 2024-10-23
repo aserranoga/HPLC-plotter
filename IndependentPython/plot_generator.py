@@ -41,7 +41,7 @@ def export_data_csv(data_frames, labels, filename='chromatogram_data.csv'):
     print(f'Data saved to {filename}')
 
 def plot_chromatograms(data_frames, labels, time_col='min', intensity_col='normalized_intensity', 
-                       offset=110, font='Arial', font_size=9, font_weight=regular, line_width=1.5, major_tick_interval=5, num_minor_ticks=4):
+                       offset=110, font='Arial', font_size=9, font_weight='regular', line_width=1.5, major_tick_interval=5, num_minor_ticks=4):
     """Plot chromatograms with offsets."""
     plt.figure(figsize=(3, 3))
     plt.rc('font', family=font, size=font_size, weight=font_weight)
