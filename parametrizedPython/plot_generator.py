@@ -1,5 +1,4 @@
-import pandas as pd
-import numpy as np
+from pandas import read_csv, merge
 import matplotlib.pyplot as plt
 import os
 from matplotlib.ticker import MultipleLocator, AutoMinorLocator
@@ -58,9 +57,9 @@ adjust_bottom = config.getfloat('Style', 'adjust_bottom')
 # Combine output folder and filename
 output_file = os.path.join(destination_folder, filename)
 
-def read_csv(file_path):
+def read_csv_file(file_path):
     """Read a CSV file and return a DataFrame."""
-    return pd.read_csv(file_path)
+    return read_csv(file_path)
 
 def find_peak_and_baseline(df, time_col, intensity_col, time_range):
     """Find the peak and baseline intensity within a specified time range."""
@@ -79,7 +78,7 @@ def export_data_csv(data_frames, labels, filename):
     for i, df in enumerate(data_frames):
         sample_df = df[['min', 'Intensity', 'normalized_intensity']].copy()
         sample_df.columns = ['Time (min)', f'Original Intensity ({labels[i]})', f'Normalized Intensity ({labels[i]})']
-        base_df = pd.merge(base_df, sample_df, on='Time (min)', how='outer')
+        base_df = merge(base_df, sample_df, on='Time (min)', how='outer')
         base_df[f'Normalized Intensity (Offset) ({labels[i]})'] = df['normalized_intensity'] + i * 110
 
     base_df.to_csv(filename, index=False)
@@ -120,7 +119,7 @@ data_frames = []
 labels = []
 
 for file_path in file_paths:
-    df = read_csv(file_path)
+    df = read_csv_file(file_path)
     peak_intensity, baseline_intensity = find_peak_and_baseline(df, time_col='min', intensity_col='Intensity', time_range=time_range)
     normalized_df = normalize_chromatogram(df, time_col='min', intensity_col='Intensity', 
                                            peak_intensity=peak_intensity, baseline_intensity=baseline_intensity)
@@ -134,11 +133,8 @@ labels.reverse()
 # Plot the chromatograms
 plot_chromatograms(data_frames, labels)
 
-# Save the plot as a PNG file
-plt.savefig(f'{output_file}.png', dpi=600)
+# Save the plot as a PDF file
+plt.savefig(f'{output_file}.pdf')
 
 # Export all the data as csv file
 export_data_csv(data_frames, labels, filename=f'{output_file}.csv')
-
-# Show the plot
-plt.show()
