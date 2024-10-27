@@ -34,7 +34,8 @@ major_tick_interval = config.getfloat('General', 'major_tick_interval')
 num_minor_ticks = config.getint('General', 'num_minor_ticks')
 
 # Style configuration
-figure_size = tuple(map(float, config.get('Style', 'figure_size').split(',')))
+# Convert the figure size from cm to inches
+figure_size = tuple(map(lambda x: float(x) / 2.54, config.get('Style', 'figure_size').split(',')))
 font = config.get('Style', 'font')
 axis_width = config.getfloat('Style', 'axis_width')
 font_size = config.getfloat('Style', 'font_size')
