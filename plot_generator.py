@@ -27,7 +27,7 @@ config.read(config_file_path)
 # General configuration
 destination_folder = config.get('General', 'destination_folder')
 filename = config.get('General', 'filename')
-file_paths = config.get('General', 'file_paths').split(', ')  # Convert CSV paths to a list
+file_paths = [path.strip().strip("'") for path in config.get('General', 'file_paths').split("' '")]  # Convert CSV paths to a list
 time_range = tuple(map(float, config.get('General', 'time_range').split(',')))
 x_limits = tuple(map(float, config.get('General', 'x_limits').split(',')))
 major_tick_interval = config.getfloat('General', 'major_tick_interval')
