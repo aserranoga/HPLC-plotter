@@ -72,6 +72,14 @@ def normalize_chromatogram(df, time_col, intensity_col, peak_intensity, baseline
     df['normalized_intensity'] = (df[intensity_col] - baseline_intensity) / (peak_intensity - baseline_intensity) * 100
     return df
 
+def confirm_overwrite(file_path):
+    """Prompt the user to confirm overwriting an existing file."""
+    if os.path.exists(file_path):
+        file_name = os.path.basename(file_path)  # Extract just the filename
+        response = input(f"The file '{file_name}' already exists. Do you want to overwrite it? (y/n): ").strip().lower()
+        return response == 'y'
+    return True  # If the file doesn't exist, allow saving
+
 def export_data_csv(data_frames, labels, filename):
     """Save normalized chromatogram data to a CSV file."""
     base_df = data_frames[0][['min']].rename(columns={'min': 'Time (min)'})  # Start with just time points
@@ -134,8 +142,21 @@ labels.reverse()
 # Plot the chromatograms
 plot_chromatograms(data_frames, labels)
 
-# Save the plot as a PDF file
-plt.savefig(f'{output_file}.pdf')
+# Combine output folder and filename for the PDF and CSV files
+output_pdf = f'{output_file}.pdf'
+output_csv = f'{output_file}.csv'
 
-# Export all the data as csv file
-export_data_csv(data_frames, labels, filename=f'{output_file}.csv')
+# Check for confirmation before overwriting the PDF file
+if confirm_overwrite(output_pdf):
+    # Save the plot as a PDF file
+    plt.savefig(output_pdf)
+    print(f"Plot saved to {output_pdf}")
+else:
+    print("PDF save operation canceled.")
+
+# Check for confirmation before overwriting the CSV file
+if confirm_overwrite(output_csv):
+    # Export all the data as CSV file
+    export_data_csv(data_frames, labels, filename=output_csv)
+else:
+    print("CSV save operation canceled.")
