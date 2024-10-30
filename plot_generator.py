@@ -25,7 +25,8 @@ config = configparser.ConfigParser()
 config.read(config_file_path)
 
 # General configuration
-destination_folder = config.get('General', 'destination_folder')
+csv_destination_folder = config.get('General', 'csv_destination_folder')
+pdf_destination_folder = config.get('General', 'pdf_destination_folder')
 filename = config.get('General', 'filename')
 file_paths = [path.strip().strip("'") for path in config.get('General', 'file_paths').split("' '")]  # Convert CSV paths to a list
 time_range = tuple(map(float, config.get('General', 'time_range').split(',')))
@@ -55,8 +56,9 @@ adjust_right = config.getfloat('Style', 'adjust_right')
 adjust_top = config.getfloat('Style', 'adjust_top')
 adjust_bottom = config.getfloat('Style', 'adjust_bottom')
 
-# Combine output folder and filename
-output_file = os.path.join(destination_folder, filename)
+# Combine destination folders and filename for the PDF and CSV files
+output_pdf = os.path.join(pdf_destination_folder, f"{filename}.pdf")
+output_csv = os.path.join(csv_destination_folder, f"{filename}.csv")
 
 def read_csv_file(file_path):
     """Read a CSV file and return a DataFrame."""
@@ -142,9 +144,9 @@ labels.reverse()
 # Plot the chromatograms
 plot_chromatograms(data_frames, labels)
 
-# Combine output folder and filename for the PDF and CSV files
-output_pdf = f'{output_file}.pdf'
-output_csv = f'{output_file}.csv'
+# Ensure the CSV and PDF destination folder exist
+os.makedirs(pdf_destination_folder, exist_ok=True)
+os.makedirs(csv_destination_folder, exist_ok=True)
 
 # Check for confirmation before overwriting the PDF file
 if confirm_overwrite(output_pdf):
